@@ -69,6 +69,18 @@ print(store["bar"])
 print(f"Here's the whole thing: {store.dict()}")
 ```
 
+If you exit the process and create a new store object with same name, you will still be able to access your values:
+
+```python
+from prefect_kv import KVStore
+
+# Get the existing KV store named 'demo-store'
+store = KVStore(name="demo-store")
+
+print(store["foo"])
+print(store["bar"])
+```
+
 ## Resources
 
 If you encounter any bugs while using `prefect-kv`, feel free to open an issue in the [prefect-kv](https://github.com/madkinsz/prefect-kv) repository.
