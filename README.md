@@ -38,30 +38,31 @@ Install `prefect-kv` with `pip`:
 pip install prefect-kv
 ```
 
-Then, register to [view the block](https://orion-docs.prefect.io/ui/blocks/) on Prefect Cloud:
-
-```bash
-prefect block register -m prefect_kv.credentials
-```
-
-Note, to use the `load` method on Blocks, you must already have a block document [saved through code](https://orion-docs.prefect.io/concepts/blocks/#saving-blocks) or [saved through the UI](https://orion-docs.prefect.io/ui/blocks/).
-
-### Write and run a flow
+### Using a key-value store
 
 ```python
-from prefect import flow
-from prefect_kv.tasks import (
-    goodbye_prefect_kv,
-    hello_prefect_kv,
-)
+from prefect_kv import KVStore
 
+# Create a new KV store named 'demo-store'
+store = KVStore(name="demo-store")
 
-@flow
-def example_flow():
-    hello_prefect_kv
-    goodbye_prefect_kv
+# Set a value in the store
+store.set("foo", "test")
 
-example_flow()
+# Get a value from the store
+print(store.get("foo"))
+
+# Get a value from the store with a default
+print(store.get("does-not-exist, "that's okay!"))
+
+# Set a value in the store using item syntax
+store["bar"] = "another test"
+
+# Get a value from the store using item syntax
+print(store["bar"])
+
+# View the whole store
+print(f"Here's the whole thing: {store.dict()}")
 ```
 
 ## Resources
