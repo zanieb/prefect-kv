@@ -40,6 +40,10 @@ pip install prefect-kv
 
 ### Using a key-value store
 
+The entire store is saved to Prefect's API each time a key is updated.
+Each time a key is read, the entire store is loaded from Prefect's API.
+This exposes a simple way to persist and retrieve values across flow runs and tasks, independently of your dataflow.
+
 ```python
 from prefect_kv import KVStore
 
