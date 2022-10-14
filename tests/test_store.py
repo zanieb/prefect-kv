@@ -25,6 +25,15 @@ def test_store_set_and_get():
     assert store.get("foo") == "test"
 
 
+def test_store_set_and_get_new_instance():
+    store1 = KVStore(name="test")
+    store2 = KVStore(name="test")
+    store1.set("foo", "test")
+    assert store2.get("foo") == "test"
+    assert store2.set("bar", "test")
+    assert store1.get("bar") == "test"
+
+
 def test_store_set_and_get_item_syntax():
     store = KVStore(name="test")
     store["foo"] = "test"
