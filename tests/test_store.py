@@ -1,12 +1,10 @@
-from prefect_kv import KVStore, InvalidKVStore
-from prefect.testing.utilities import prefect_test_harness
+import runpy
+
 import pytest
+from prefect.blocks.system import JSON
 
-
-@pytest.fixture(autouse=True)
-def isolated_database():
-    with prefect_test_harness():
-        yield
+from prefect_kv import InvalidKVStore, KVStore
+from prefect_kv._backend import KV_PREFIX
 
 
 def test_store_name():
@@ -61,3 +59,28 @@ def test_store_dict():
     store["a"] = 1
     store["b"] = 2
     assert store.dict() == {"a": 1, "b": 2}
+
+
+def test_store_existing_invalid_block_not_a_dictionary():
+    JSON(value="foo").save(KV_PREFIX + "test")
+    store = KVStore(name="test")
+    with pytest.raises(InvalidKVStore):
+        store.get("test")
+
+
+def test_store_existing_invalid_block_not_a_store():
+    JSON(value={}).save(KV_PREFIX + "test")
+    store = KVStore(name="test")
+    with pytest.raises(InvalidKVStore):
+        store.get("test")
+    with pytest.raises(InvalidKVStore):
+        store.set("foo", "bar")
+
+
+def test_backend_demo():
+    # Ignore the re-import warning
+    with pytest.warns(
+        RuntimeWarning,
+        match="'prefect_kv._backend' found in sys.modules after import of package",
+    ):
+        runpy.run_module("prefect_kv._backend", run_name="__main__")
