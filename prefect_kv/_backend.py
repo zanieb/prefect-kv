@@ -23,7 +23,7 @@ class KVStore:
 
     @property
     def full_name(self) -> str:
-        return self.full_name
+        return self._full_name
 
     async def _get_store(self) -> JSON:
         try:
@@ -64,7 +64,7 @@ class KVStore:
         return store.value
 
     def __repr__(self) -> str:
-        return f"KVStore(name={self.full_name!r})"
+        return f"KVStore(name={self.name!r})"
 
     def __setitem__(self, __key: str, __value: Any) -> None:
         return self.set(__key, __value)

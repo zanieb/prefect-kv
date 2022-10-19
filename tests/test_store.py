@@ -1,4 +1,12 @@
 from prefect_kv import KVStore, InvalidKVStore
+from prefect.testing.utilities import prefect_test_harness
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def isolated_database():
+    with prefect_test_harness():
+        yield
 
 
 def test_store_name():
@@ -16,7 +24,7 @@ def test_store_name_full_name():
 
 def test_store_repr():
     store = KVStore(name="test")
-    assert repr(store) == "KVStore('test')"
+    assert repr(store) == "KVStore(name='test')"
 
 
 def test_store_set_and_get():
@@ -30,7 +38,7 @@ def test_store_set_and_get_new_instance():
     store2 = KVStore(name="test")
     store1.set("foo", "test")
     assert store2.get("foo") == "test"
-    assert store2.set("bar", "test")
+    store2.set("bar", "test")
     assert store1.get("bar") == "test"
 
 
